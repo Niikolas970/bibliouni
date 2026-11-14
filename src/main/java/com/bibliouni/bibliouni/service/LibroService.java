@@ -27,6 +27,12 @@ public class LibroService {
 
     public Libro registrarLibro(Libro libro) {
 
+        if (libro == null || libro.getTitulo() == null || libro.getTitulo().isBlank()
+                || libro.getAutor() == null || libro.getAutor().isBlank()
+                || libro.getIsbn() == null || libro.getIsbn().isBlank()) {
+            throw new IllegalArgumentException("El libro debe tener titulo, autor e ISBN");
+        }
+
         if (libro.getCantidadDisponible() < 0) {
             throw new IllegalArgumentException(
                     "La cantidad disponible no puede ser negativa"
