@@ -12,6 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,6 +29,24 @@ class LibroServiceTest {
     private LibroService libroService;
 
     private Libro libro;
+
+    static Stream<Libro> librosIncompletos() {
+        return Stream.of(null,
+                new Libro(null, "Autor", "ISBN", 1),
+                new Libro("  ", "Autor", "ISBN", 1),
+                new Libro("Titulo", null, "ISBN", 1),
+                new Libro("Titulo", "\t", "ISBN", 1),
+                new Libro("Titulo", "Autor", null, 1),
+                new Libro("Titulo", "Autor", " ", 1));
+    }
+
+    @ParameterizedTest
+    @MethodSource("librosIncompletos")
+    void debeRechazarLibroIncompleto(Libro incompleto) {
+        assertThrows(IllegalArgumentException.class,
+                () -> libroService.registrarLibro(incompleto));
+        verifyNoInteractions(libroRepository);
+    }
 
     @BeforeEach
     void prepararDatos() {
