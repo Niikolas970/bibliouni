@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Prestamo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bibliouni</a> &gt; <a href="index.source.html" class="el_package">com.bibliouni.bibliouni.model</a> &gt; <span class="el_source">Prestamo.java</span></div><h1>Prestamo.java</h1><pre class="source lang-java linenums">package com.bibliouni.bibliouni.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = &quot;prestamos&quot;)
+public class Prestamo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = &quot;libro_id&quot;, nullable = false)
+    private Libro libro;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = &quot;estudiante_id&quot;, nullable = false)
+    private Estudiante estudiante;
+
+    @Column(nullable = false)
+    private LocalDate fechaPrestamo;
+
+    @Column(nullable = false)
+    private LocalDate fechaVencimiento;
+
+    private LocalDate fechaDevolucion;
+
+<span class="fc" id="L30">    public Prestamo() {</span>
+<span class="fc" id="L31">    }</span>
+
+    public Prestamo(Libro libro, Estudiante estudiante,
+                    LocalDate fechaPrestamo,
+<span class="fc" id="L35">                    LocalDate fechaVencimiento) {</span>
+<span class="fc" id="L36">        this.libro = libro;</span>
+<span class="fc" id="L37">        this.estudiante = estudiante;</span>
+<span class="fc" id="L38">        this.fechaPrestamo = fechaPrestamo;</span>
+<span class="fc" id="L39">        this.fechaVencimiento = fechaVencimiento;</span>
+<span class="fc" id="L40">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L43">        return id;</span>
+    }
+
+    public Libro getLibro() {
+<span class="fc" id="L47">        return libro;</span>
+    }
+
+    public void setLibro(Libro libro) {
+<span class="fc" id="L51">        this.libro = libro;</span>
+<span class="fc" id="L52">    }</span>
+
+    public Estudiante getEstudiante() {
+<span class="fc" id="L55">        return estudiante;</span>
+    }
+
+    public LocalDate getFechaPrestamo() {
+<span class="fc" id="L59">        return fechaPrestamo;</span>
+    }
+
+    public LocalDate getFechaVencimiento() {
+<span class="fc" id="L63">        return fechaVencimiento;</span>
+    }
+
+    public LocalDate getFechaDevolucion() {
+<span class="fc" id="L67">        return fechaDevolucion;</span>
+    }
+
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+<span class="fc" id="L71">        this.fechaDevolucion = fechaDevolucion;</span>
+<span class="fc" id="L72">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

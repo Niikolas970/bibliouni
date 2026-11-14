@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Libro.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bibliouni</a> &gt; <a href="index.source.html" class="el_package">com.bibliouni.bibliouni.model</a> &gt; <span class="el_source">Libro.java</span></div><h1>Libro.java</h1><pre class="source lang-java linenums">package com.bibliouni.bibliouni.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = &quot;libros&quot;)
+public class Libro {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String titulo;
+
+    @Column(nullable = false)
+    private String autor;
+
+    @Column(nullable = false, unique = true)
+    private String isbn;
+
+    @Column(nullable = false)
+    private int cantidadDisponible;
+
+<span class="fc" id="L25">    public Libro() {</span>
+<span class="fc" id="L26">    }</span>
+
+    public Libro(String titulo, String autor,
+<span class="fc" id="L29">                 String isbn, int cantidadDisponible) {</span>
+<span class="fc" id="L30">        this.titulo = titulo;</span>
+<span class="fc" id="L31">        this.autor = autor;</span>
+<span class="fc" id="L32">        this.isbn = isbn;</span>
+<span class="fc" id="L33">        this.cantidadDisponible = cantidadDisponible;</span>
+<span class="fc" id="L34">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L37">        return id;</span>
+    }
+
+    public String getTitulo() {
+<span class="fc" id="L41">        return titulo;</span>
+    }
+
+    public void setTitulo(String titulo) {
+<span class="nc" id="L45">        this.titulo = titulo;</span>
+<span class="nc" id="L46">    }</span>
+
+    public String getAutor() {
+<span class="fc" id="L49">        return autor;</span>
+    }
+
+    public void setAutor(String autor) {
+<span class="nc" id="L53">        this.autor = autor;</span>
+<span class="nc" id="L54">    }</span>
+
+    public String getIsbn() {
+<span class="fc" id="L57">        return isbn;</span>
+    }
+
+    public void setIsbn(String isbn) {
+<span class="nc" id="L61">        this.isbn = isbn;</span>
+<span class="nc" id="L62">    }</span>
+
+    public int getCantidadDisponible() {
+<span class="fc" id="L65">        return cantidadDisponible;</span>
+    }
+
+    public void setCantidadDisponible(int cantidadDisponible) {
+<span class="fc" id="L69">        this.cantidadDisponible = cantidadDisponible;</span>
+<span class="fc" id="L70">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
