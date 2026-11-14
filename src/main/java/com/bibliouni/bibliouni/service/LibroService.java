@@ -27,9 +27,8 @@ public class LibroService {
 
     public Libro registrarLibro(Libro libro) {
 
-        if (libro == null || libro.getTitulo() == null || libro.getTitulo().isBlank()
-                || libro.getAutor() == null || libro.getAutor().isBlank()
-                || libro.getIsbn() == null || libro.getIsbn().isBlank()) {
+        if (libro == null || estaVacio(libro.getTitulo())
+                || estaVacio(libro.getAutor()) || estaVacio(libro.getIsbn())) {
             throw new IllegalArgumentException("El libro debe tener titulo, autor e ISBN");
         }
 
@@ -46,5 +45,9 @@ public class LibroService {
         }
 
         return libroRepository.save(libro);
+    }
+
+    private static boolean estaVacio(String valor) {
+        return valor == null || valor.isBlank();
     }
 }
