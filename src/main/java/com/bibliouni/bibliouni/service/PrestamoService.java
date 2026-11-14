@@ -85,7 +85,15 @@ public class PrestamoService {
 
     @Transactional
     public Prestamo registrarDevolucion(Long id, LocalDate fechaDevolucion) {
-        // Contrato inicial para ejecutar las pruebas Red de la funcionalidad nueva.
-        throw new UnsupportedOperationException("Devolucion pendiente de implementar");
+        Prestamo prestamo = prestamoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("El prestamo no existe"));
+        if (prestamo.getFechaDevolucion() != null) {
+            throw new IllegalStateException("El prestamo ya fue devuelto");
+        }
+        Libro libro = prestamo.getLibro();
+        libro.setCantidadDisponible(libro.getCantidadDisponible() + 1);
+        prestamo.setFechaDevolucion(fechaDevolucion);
+        libroRepository.save(libro);
+        return prestamoRepository.save(prestamo);
     }
 }
