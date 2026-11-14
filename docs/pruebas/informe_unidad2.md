@@ -100,4 +100,3 @@ La ejecución final permitió aceptar técnicamente el alcance automatizado de e
 - Evidencia primaria del proyecto: archivos TEST-*.xml, maven.log, ejecucion.json y cobertura/jacoco.csv de evidencias/unidad2/11-final.
 
 Los anexos del documento Word contienen el plan de pruebas, el registro TDD y el catálogo completo de casos. Los documentos de Unidad 1 conservan sus resultados históricos y no deben interpretarse como el resumen actualizado de esta ejecución.
-

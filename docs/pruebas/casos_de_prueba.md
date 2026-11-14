@@ -500,4 +500,3 @@ La combinación D6 de devolución y multa puntual se cubre por las unidades de a
 Total: 40 casos formales; la suite completa ejecutó 70 invocaciones. Los casos parametrizados representan varias invocaciones y algunos métodos originales de regresión no tienen un caso formal adicional. No se suman estos dos conteos como si fueran pruebas diferentes.
 
 Fuera de alcance y pendientes: RF-03, RF-07, RF-08, carga, seguridad y concurrencia de Unidad 1 conservan su estado en escenarios.md. No se declaran aprobados por estos resultados.
-

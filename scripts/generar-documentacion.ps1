@@ -104,7 +104,7 @@ foreach ($fila in $matriz) { [void]$texto.AppendLine($fila) }
 [void]$texto.AppendLine("Total: $($casos.Count) casos formales; la suite completa ejecutó $total invocaciones. Los casos parametrizados representan varias invocaciones y algunos métodos originales de regresión no tienen un caso formal adicional. No se suman estos dos conteos como si fueran pruebas diferentes.")
 [void]$texto.AppendLine("")
 [void]$texto.AppendLine("Fuera de alcance y pendientes: RF-03, RF-07, RF-08, carga, seguridad y concurrencia de Unidad 1 conservan su estado en escenarios.md. No se declaran aprobados por estos resultados.")
-$texto.ToString() | Set-Content "$docs/casos_de_prueba.md" -Encoding UTF8
+$texto.ToString().TrimEnd() | Set-Content "$docs/casos_de_prueba.md" -Encoding UTF8
 
 $filas = @(Import-Csv "$fuente/cobertura/jacoco.csv")
 function Cobertura($conjunto, $tipo) {
@@ -223,5 +223,5 @@ La ejecución final permitió aceptar técnicamente el alcance automatizado de e
 
 Los anexos del documento Word contienen el plan de pruebas, el registro TDD y el catálogo completo de casos. Los documentos de Unidad 1 conservan sus resultados históricos y no deben interpretarse como el resumen actualizado de esta ejecución.
 "@)
-$informe.ToString() | Set-Content "$docs/informe_unidad2.md" -Encoding UTF8
+$informe.ToString().TrimEnd() | Set-Content "$docs/informe_unidad2.md" -Encoding UTF8
 Write-Output "Documentacion generada: $total pruebas, $($casos.Count) casos formales; trazabilidad XML validada."
