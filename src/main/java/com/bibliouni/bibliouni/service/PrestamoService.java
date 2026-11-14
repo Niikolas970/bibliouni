@@ -54,11 +54,7 @@ public class PrestamoService {
             );
         }
 
-        libro.setCantidadDisponible(
-                libro.getCantidadDisponible() - 1
-        );
-
-        libroRepository.save(libro);
+        ajustarDisponibilidad(libro, -1);
 
         return prestamoRepository.save(prestamo);
     }
@@ -91,9 +87,13 @@ public class PrestamoService {
             throw new IllegalStateException("El prestamo ya fue devuelto");
         }
         Libro libro = prestamo.getLibro();
-        libro.setCantidadDisponible(libro.getCantidadDisponible() + 1);
         prestamo.setFechaDevolucion(fechaDevolucion);
-        libroRepository.save(libro);
+        ajustarDisponibilidad(libro, 1);
         return prestamoRepository.save(prestamo);
+    }
+
+    private void ajustarDisponibilidad(Libro libro, int diferencia) {
+        libro.setCantidadDisponible(libro.getCantidadDisponible() + diferencia);
+        libroRepository.save(libro);
     }
 }
