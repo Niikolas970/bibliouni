@@ -22,6 +22,9 @@ public class LibroService {
     }
 
     public Optional<Libro> buscarPorId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El identificador debe ser positivo");
+        }
         return libroRepository.findById(id);
     }
 

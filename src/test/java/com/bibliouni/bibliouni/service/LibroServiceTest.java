@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,6 +31,28 @@ class LibroServiceTest {
     private LibroService libroService;
 
     private Libro libro;
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(longs = {0, -1})
+    void debeRechazarIdentificadorInvalido(Long id) {
+        assertThrows(IllegalArgumentException.class, () -> libroService.buscarPorId(id));
+        verifyNoInteractions(libroRepository);
+    }
+
+    @Test
+    void debeRegistrarLibroConCeroEjemplares() {
+        libro.setCantidadDisponible(0);
+        when(libroRepository.save(libro)).thenReturn(libro);
+        assertEquals(0, libroService.registrarLibro(libro).getCantidadDisponible());
+        verify(libroRepository).save(libro);
+    }
+
+    @Test
+    void debeListarCatalogoVacio() {
+        when(libroRepository.findAll()).thenReturn(List.of());
+        assertTrue(libroService.listarLibros().isEmpty());
+    }
 
     static Stream<Libro> librosIncompletos() {
         return Stream.of(null,
