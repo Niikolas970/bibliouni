@@ -82,4 +82,10 @@ public class PrestamoService {
 
         return Math.max(0, diasRetraso) * MULTA_DIARIA;
     }
+
+    @Transactional
+    public Prestamo registrarDevolucion(Long id, LocalDate fechaDevolucion) {
+        // Contrato inicial para ejecutar las pruebas Red de la funcionalidad nueva.
+        throw new UnsupportedOperationException("Devolucion pendiente de implementar");
+    }
 }

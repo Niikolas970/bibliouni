@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,6 +33,41 @@ class PrestamoServiceTest {
 
     private Libro libro;
     private Estudiante estudiante;
+
+    @Test
+    void debeRegistrarDevolucionYRecuperarDisponibilidad() {
+        libro.setCantidadDisponible(0);
+        Prestamo prestamo = new Prestamo(libro, estudiante,
+                LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 8));
+        LocalDate devolucion = LocalDate.of(2026, 11, 11);
+        when(prestamoRepository.findById(1L)).thenReturn(Optional.of(prestamo));
+        when(prestamoRepository.save(prestamo)).thenReturn(prestamo);
+
+        Prestamo resultado = prestamoService.registrarDevolucion(1L, devolucion);
+
+        assertSame(prestamo, resultado);
+        assertEquals(devolucion, resultado.getFechaDevolucion());
+        assertEquals(1, libro.getCantidadDisponible());
+        assertEquals(6000L, prestamoService.calcularMulta(resultado, devolucion));
+        verify(libroRepository).save(libro);
+        verify(prestamoRepository).save(prestamo);
+    }
+
+    @Test
+    void debeRechazarDevolucionDuplicada() {
+        Prestamo prestamo = new Prestamo(libro, estudiante,
+                LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 8));
+        prestamo.setFechaDevolucion(LocalDate.of(2026, 11, 8));
+        when(prestamoRepository.findById(1L)).thenReturn(Optional.of(prestamo));
+
+        assertThrows(IllegalStateException.class, () ->
+                prestamoService.registrarDevolucion(1L, LocalDate.of(2026, 11, 9)));
+
+        assertEquals(2, libro.getCantidadDisponible());
+        assertEquals(LocalDate.of(2026, 11, 8), prestamo.getFechaDevolucion());
+        verify(libroRepository, never()).save(any());
+        verify(prestamoRepository, never()).save(any());
+    }
 
     @BeforeEach
     void prepararDatos() {

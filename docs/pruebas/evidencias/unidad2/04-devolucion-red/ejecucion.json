@@ -1,0 +1,8 @@
+﻿{
+    "inicio":  "2026-11-14T12:21:20.8034479-05:00",
+    "fin":  "2026-11-14T12:21:29.0187943-05:00",
+    "comando":  ".\\mvnw.cmd clean test -Dtest=PrestamoServiceTest",
+    "codigoSalida":  1,
+    "commitBase":  "262142ba86d56ba77e21dadd0be613e01e5551cf",
+    "rama":  "feature/plan-tests"
+}
