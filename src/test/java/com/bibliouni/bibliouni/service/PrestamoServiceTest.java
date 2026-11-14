@@ -46,6 +46,30 @@ class PrestamoServiceTest {
     }
 
     @Test
+    void debeUsarDisponibilidadPersistida() {
+        Libro referencia = mock(Libro.class);
+        when(referencia.getId()).thenReturn(1L);
+        when(libroRepository.findById(1L)).thenReturn(Optional.of(libro));
+        Prestamo prestamo = new Prestamo(referencia, estudiante,
+                LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 8));
+        when(prestamoRepository.save(prestamo)).thenReturn(prestamo);
+        assertSame(libro, prestamoService.registrarPrestamo(prestamo).getLibro());
+        assertEquals(1, libro.getCantidadDisponible());
+    }
+
+    @Test
+    void debeRechazarLibroReferenciadoInexistente() {
+        Libro referencia = mock(Libro.class);
+        when(referencia.getId()).thenReturn(99L);
+        when(libroRepository.findById(99L)).thenReturn(Optional.empty());
+        Prestamo prestamo = new Prestamo(referencia, estudiante,
+                LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 8));
+        assertThrows(IllegalArgumentException.class, () -> prestamoService.registrarPrestamo(prestamo));
+        verify(libroRepository, never()).save(any());
+        verifyNoInteractions(prestamoRepository);
+    }
+
+    @Test
     void debeBuscarPrestamoExistente() {
         Prestamo prestamo = prestamoValido();
         when(prestamoRepository.findById(1L)).thenReturn(Optional.of(prestamo));

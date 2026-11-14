@@ -52,6 +52,11 @@ public class PrestamoService {
         }
 
         Libro libro = prestamo.getLibro();
+        if (libro.getId() != null) {
+            // Una referencia separada de JPA puede contener disponibilidad desactualizada.
+            libro = libroRepository.findById(libro.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("El libro no existe"));
+        }
 
         if (libro.getCantidadDisponible() <= 0) {
             throw new IllegalStateException(
@@ -59,6 +64,7 @@ public class PrestamoService {
             );
         }
 
+        prestamo.setLibro(libro);
         ajustarDisponibilidad(libro, -1);
 
         return prestamoRepository.save(prestamo);
