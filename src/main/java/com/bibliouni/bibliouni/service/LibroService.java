@@ -1,3 +1,4 @@
+
 package com.bibliouni.bibliouni.service;
 
 import com.bibliouni.bibliouni.model.Libro;
@@ -5,6 +6,7 @@ import com.bibliouni.bibliouni.repository.LibroRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LibroService {
@@ -17,6 +19,10 @@ public class LibroService {
 
     public List<Libro> listarLibros() {
         return libroRepository.findAll();
+    }
+
+    public Optional<Libro> buscarPorId(Long id) {
+        return libroRepository.findById(id);
     }
 
     public Libro registrarLibro(Libro libro) {
