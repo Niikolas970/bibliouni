@@ -1,0 +1,8 @@
+﻿{
+    "inicio":  "2026-11-14T12:24:00.2437396-05:00",
+    "fin":  "2026-11-14T12:24:18.6762782-05:00",
+    "comando":  ".\\mvnw.cmd clean test",
+    "codigoSalida":  0,
+    "commitBase":  "27ccb71c159acfd2ef1ccacdb724e67914710481",
+    "rama":  "feature/plan-tests"
+}
