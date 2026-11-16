@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LibroService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bibliouni</a> &gt; <a href="index.source.html" class="el_package">com.bibliouni.bibliouni.service</a> &gt; <span class="el_source">LibroService.java</span></div><h1>LibroService.java</h1><pre class="source lang-java linenums">
+package com.bibliouni.bibliouni.service;
+
+import com.bibliouni.bibliouni.model.Libro;
+import com.bibliouni.bibliouni.repository.LibroRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class LibroService {
+
+    private final LibroRepository libroRepository;
+
+<span class="fc" id="L16">    public LibroService(LibroRepository libroRepository) {</span>
+<span class="fc" id="L17">        this.libroRepository = libroRepository;</span>
+<span class="fc" id="L18">    }</span>
+
+    public List&lt;Libro&gt; listarLibros() {
+<span class="fc" id="L21">        return libroRepository.findAll();</span>
+    }
+
+    public Optional&lt;Libro&gt; buscarPorId(Long id) {
+<span class="fc bfc" id="L25" title="All 4 branches covered.">        if (id == null || id &lt;= 0) {</span>
+<span class="fc" id="L26">            throw new IllegalArgumentException(&quot;El identificador debe ser positivo&quot;);</span>
+        }
+<span class="fc" id="L28">        return libroRepository.findById(id);</span>
+    }
+
+    public Libro registrarLibro(Libro libro) {
+
+<span class="fc bfc" id="L33" title="All 4 branches covered.">        if (libro == null || estaVacio(libro.getTitulo())</span>
+<span class="fc bfc" id="L34" title="All 4 branches covered.">                || estaVacio(libro.getAutor()) || estaVacio(libro.getIsbn())) {</span>
+<span class="fc" id="L35">            throw new IllegalArgumentException(&quot;El libro debe tener titulo, autor e ISBN&quot;);</span>
+        }
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (libro.getCantidadDisponible() &lt; 0) {</span>
+<span class="fc" id="L39">            throw new IllegalArgumentException(</span>
+                    &quot;La cantidad disponible no puede ser negativa&quot;
+            );
+        }
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (libroRepository.existsByIsbn(libro.getIsbn())) {</span>
+<span class="fc" id="L45">            throw new IllegalStateException(</span>
+                    &quot;Ya existe un libro registrado con ese ISBN&quot;
+            );
+        }
+
+<span class="fc" id="L50">        return libroRepository.save(libro);</span>
+    }
+
+    private static boolean estaVacio(String valor) {
+<span class="fc bfc" id="L54" title="All 4 branches covered.">        return valor == null || valor.isBlank();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

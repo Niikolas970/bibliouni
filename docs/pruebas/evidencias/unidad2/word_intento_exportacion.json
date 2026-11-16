@@ -1,0 +1,9 @@
+﻿{
+    "fecha":  "2026-11-14T12:41:51.2319403-05:00",
+    "aplicacion":  "Microsoft Word",
+    "apertura":  "No verificada: automatizacion excedio 45 segundos",
+    "estructuraOOXML":  "Verificada por validar-entrega.ps1",
+    "inspeccionVisual":  "No realizada",
+    "exportacionPDF":  "No confirmada",
+    "log":  "word_automatizacion.log"
+}
