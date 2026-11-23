@@ -1,3 +1,4 @@
+
 package com.bibliouni.bibliouni.service;
 
 import com.bibliouni.bibliouni.model.Libro;
@@ -5,6 +6,7 @@ import com.bibliouni.bibliouni.repository.LibroRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LibroService {
@@ -19,7 +21,19 @@ public class LibroService {
         return libroRepository.findAll();
     }
 
+    public Optional<Libro> buscarPorId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El identificador debe ser positivo");
+        }
+        return libroRepository.findById(id);
+    }
+
     public Libro registrarLibro(Libro libro) {
+
+        if (libro == null || estaVacio(libro.getTitulo())
+                || estaVacio(libro.getAutor()) || estaVacio(libro.getIsbn())) {
+            throw new IllegalArgumentException("El libro debe tener titulo, autor e ISBN");
+        }
 
         if (libro.getCantidadDisponible() < 0) {
             throw new IllegalArgumentException(
@@ -34,5 +48,9 @@ public class LibroService {
         }
 
         return libroRepository.save(libro);
+    }
+
+    private static boolean estaVacio(String valor) {
+        return valor == null || valor.isBlank();
     }
 }

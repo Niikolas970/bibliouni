@@ -1,2 +1,2 @@
-/mvnw text eol=lf
-*.cmd text eol=crlf
+# Las evidencias conservan los espacios emitidos por Maven, Hibernate y Surefire.
+docs/pruebas/evidencias/** whitespace=-blank-at-eol,-blank-at-eof

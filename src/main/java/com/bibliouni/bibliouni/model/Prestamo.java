@@ -47,6 +47,10 @@ public class Prestamo {
         return libro;
     }
 
+    public void setLibro(Libro libro) {
+        this.libro = libro;
+    }
+
     public Estudiante getEstudiante() {
         return estudiante;
     }

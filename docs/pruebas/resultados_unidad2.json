@@ -1,0 +1,14 @@
+﻿{
+    "lineasServicios":  "64/64 (100,00 %)",
+    "ramasServicios":  "60/60 (100,00 %)",
+    "pruebas":  70,
+    "commitCodigo":  "6eaba6812721980b32a4be5d73bcd8baa1768de3",
+    "fecha":  "2026-11-14T12:30:33.0680403-05:00",
+    "lineasGlobal":  "122/139 (87,77 %)",
+    "omitidas":  0,
+    "ejecucion":  "11-final",
+    "casosFormales":  40,
+    "errores":  0,
+    "ramasGlobal":  "60/60 (100,00 %)",
+    "fallos":  0
+}

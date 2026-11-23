@@ -1,0 +1,8 @@
+﻿{
+    "inicio":  "2026-11-14T12:19:48.8756717-05:00",
+    "fin":  "2026-11-14T12:19:57.0804489-05:00",
+    "comando":  ".\\mvnw.cmd clean test -Dtest=LibroServiceTest",
+    "codigoSalida":  1,
+    "commitBase":  "0aac3cf0f0cab2bad38b43d553bb7e768a5a1907",
+    "rama":  "feature/plan-tests"
+}

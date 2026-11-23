@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PrestamoService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bibliouni</a> &gt; <a href="index.source.html" class="el_package">com.bibliouni.bibliouni.service</a> &gt; <span class="el_source">PrestamoService.java</span></div><h1>PrestamoService.java</h1><pre class="source lang-java linenums">
+package com.bibliouni.bibliouni.service;
+
+import com.bibliouni.bibliouni.model.Libro;
+import com.bibliouni.bibliouni.model.Prestamo;
+import com.bibliouni.bibliouni.repository.LibroRepository;
+import com.bibliouni.bibliouni.repository.PrestamoRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+
+@Service
+public class PrestamoService {
+
+    private static final long MULTA_DIARIA = 2000L;
+
+    private final PrestamoRepository prestamoRepository;
+    private final LibroRepository libroRepository;
+
+    public PrestamoService(
+            PrestamoRepository prestamoRepository,
+<span class="fc" id="L25">            LibroRepository libroRepository) {</span>
+
+<span class="fc" id="L27">        this.prestamoRepository = prestamoRepository;</span>
+<span class="fc" id="L28">        this.libroRepository = libroRepository;</span>
+<span class="fc" id="L29">    }</span>
+
+    @Transactional
+    public Prestamo registrarPrestamo(Prestamo prestamo) {
+
+<span class="fc bfc" id="L34" title="All 4 branches covered.">        if (prestamo == null || prestamo.getLibro() == null</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                || prestamo.getEstudiante() == null) {</span>
+<span class="fc" id="L36">            throw new IllegalArgumentException(</span>
+                    &quot;El prestamo debe tener libro y estudiante&quot;
+            );
+        }
+
+<span class="fc bfc" id="L41" title="All 4 branches covered.">        if (prestamo.getId() != null || prestamo.getFechaDevolucion() != null) {</span>
+<span class="fc" id="L42">            throw new IllegalStateException(&quot;Solo se pueden registrar prestamos nuevos y activos&quot;);</span>
+        }
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (prestamo.getFechaPrestamo() == null</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                || prestamo.getFechaVencimiento() == null</span>
+<span class="fc" id="L47">                || prestamo.getFechaVencimiento()</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">                .isBefore(prestamo.getFechaPrestamo())) {</span>
+<span class="fc" id="L49">            throw new IllegalArgumentException(</span>
+                    &quot;Las fechas del prestamo no son validas&quot;
+            );
+        }
+
+<span class="fc" id="L54">        Libro libro = prestamo.getLibro();</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (libro.getId() != null) {</span>
+            // Una referencia separada de JPA puede contener disponibilidad desactualizada.
+<span class="fc" id="L57">            libro = libroRepository.findById(libro.getId())</span>
+<span class="fc" id="L58">                    .orElseThrow(() -&gt; new IllegalArgumentException(&quot;El libro no existe&quot;));</span>
+        }
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (libro.getCantidadDisponible() &lt;= 0) {</span>
+<span class="fc" id="L62">            throw new IllegalStateException(</span>
+                    &quot;No hay ejemplares disponibles&quot;
+            );
+        }
+
+<span class="fc" id="L67">        prestamo.setLibro(libro);</span>
+<span class="fc" id="L68">        ajustarDisponibilidad(libro, -1);</span>
+
+<span class="fc" id="L70">        return prestamoRepository.save(prestamo);</span>
+    }
+
+    public long calcularMulta(
+            Prestamo prestamo,
+            LocalDate fechaDevolucion) {
+
+<span class="fc bfc" id="L77" title="All 4 branches covered.">        if (prestamo == null || prestamo.getFechaPrestamo() == null</span>
+<span class="fc bfc" id="L78" title="All 4 branches covered.">                || prestamo.getFechaVencimiento() == null || fechaDevolucion == null</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">                || prestamo.getFechaVencimiento().isBefore(prestamo.getFechaPrestamo())</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">                || fechaDevolucion.isBefore(prestamo.getFechaPrestamo())) {</span>
+<span class="fc" id="L81">            throw new IllegalArgumentException(</span>
+                    &quot;Los datos de la devolucion no son validos&quot;
+            );
+        }
+
+<span class="fc" id="L86">        long diasRetraso = ChronoUnit.DAYS.between(</span>
+<span class="fc" id="L87">                prestamo.getFechaVencimiento(),</span>
+                fechaDevolucion
+        );
+
+<span class="fc" id="L91">        return Math.max(0, diasRetraso) * MULTA_DIARIA;</span>
+    }
+
+    @Transactional
+    public Prestamo registrarDevolucion(Long id, LocalDate fechaDevolucion) {
+<span class="fc" id="L96">        Prestamo prestamo = buscarPorId(id)</span>
+<span class="fc" id="L97">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;El prestamo no existe&quot;));</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (prestamo.getFechaDevolucion() != null) {</span>
+<span class="fc" id="L99">            throw new IllegalStateException(&quot;El prestamo ya fue devuelto&quot;);</span>
+        }
+        // Valida las fechas antes de modificar el estado o la disponibilidad.
+<span class="fc" id="L102">        calcularMulta(prestamo, fechaDevolucion);</span>
+<span class="fc" id="L103">        Libro libro = prestamo.getLibro();</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (libro.getCantidadDisponible() == Integer.MAX_VALUE) {</span>
+<span class="fc" id="L105">            throw new IllegalStateException(&quot;La disponibilidad excede el limite permitido&quot;);</span>
+        }
+<span class="fc" id="L107">        prestamo.setFechaDevolucion(fechaDevolucion);</span>
+<span class="fc" id="L108">        ajustarDisponibilidad(libro, 1);</span>
+<span class="fc" id="L109">        return prestamoRepository.save(prestamo);</span>
+    }
+
+    private void ajustarDisponibilidad(Libro libro, int diferencia) {
+<span class="fc" id="L113">        libro.setCantidadDisponible(libro.getCantidadDisponible() + diferencia);</span>
+<span class="fc" id="L114">        libroRepository.save(libro);</span>
+<span class="fc" id="L115">    }</span>
+
+    public Optional&lt;Prestamo&gt; buscarPorId(Long id) {
+<span class="fc bfc" id="L118" title="All 4 branches covered.">        if (id == null || id &lt;= 0) {</span>
+<span class="fc" id="L119">            throw new IllegalArgumentException(&quot;El identificador debe ser positivo&quot;);</span>
+        }
+<span class="fc" id="L121">        return prestamoRepository.findById(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
